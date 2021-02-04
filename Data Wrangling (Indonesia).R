@@ -42,37 +42,6 @@ data.pelanggan$Nama.Lengkap <- gsub("[ ]{2,}", " ", data.pelanggan$Nama.Lengkap)
 data.pelanggan$Nama.Lengkap <- trimws(data.pelanggan$Nama.Lengkap, which="both")
 
 
-
-##Wrangling untuk kolom No.Telepon
-
-#Mencari tau pola yang berbeda menggunakan bpa
-basic_pattern_analysis(data.pelanggan$No.Telepon, unique_only = TRUE)
-
-#Melihat pola yang paling banyak
-data.pelanggan$No.Telepon[data.pelanggan$Pola.No.Telepon=="9999999999999999"]
-
-#Mengganti pola menjadi pola dari yang paling banyak
-data.pelanggan$No.Telepon <- gsub("^0", "+62", data.pelanggan$No.Telepon)
-data.pelanggan[basic_pattern_analysis(data.pelanggan$No.Telepon)=="9999999999999999",]$No.Telepon <- 
-      paste("+", data.pelanggan[basic_pattern_analysis(data.pelanggan$No.Telepon)=="9999999999999999",]$No.Telepon, sep="")
-
-
-
-##Wrangling pada kolom kode pos
-
-#Mencari tau apakah ada pola yang berbeda
-basic_pattern_analysis(data.pelanggan$Kode.Pos, unique_only = TRUE)
-
-#Melihat pola yang paling banyak
-data.pelanggan$Kode.Pos[data.pelanggan$Pola.Kode.Pos=="999999"]
-
-#Mengganti pola menjadi pola dari yang paling banyak
-data.pelanggan$Kode.Pos[grepl(pattern = "[A]", x = data.pelanggan$Pola.Kode.Pos, ignore.case = TRUE)]
-data.pelanggan$Kode.Pos <- gsub("O", "0", data.pelanggan$Kode.Pos)
-data.pelanggan$Kode.Pos <- gsub("I", "1", data.pelanggan$Kode.Pos)
-
-
-
 ##Wrangling kolom alamat
 
 #Merubah singkatan jl, jln, jl. dan jln. menjadi Jalan
@@ -81,23 +50,6 @@ data.pelanggan$Alamat <- gsub("\\bjln\\b","Jalan",  data.pelanggan$Alamat, ignor
 data.pelanggan$Alamat <- gsub("jl[ ]*\\.","Jalan",  data.pelanggan$Alamat, ignore.case = TRUE)
 data.pelanggan$Alamat <- gsub("\\bjl\\b","Jalan",  data.pelanggan$Alamat, ignore.case = TRUE)
 data.pelanggan$Alamat <- gsub("jalan\\.","Jalan",  data.pelanggan$Alamat, ignore.case = TRUE)
-
-
-
-##Wrangling Kolom Aktif
-
-#Mencari tau apakah ada pola yang berbeda
-basic_pattern_analysis(data.pelanggan$Aktif, unique_only = TRUE)
-
-#Melihat pola yang paling banyak
-data.pelanggan$Aktif[data.pelanggan$Pola.Aktif=="9"]
-
-#Mengganti pola menjadi pola dari yang paling banyak
-data.pelanggan$Aktif[basic_pattern_analysis(data.pelanggan$Aktif)=="AAAAA"] <- "0"
-data.pelanggan$Aktif[basic_pattern_analysis(data.pelanggan$Aktif)=="AAAA"] <- "1"
-data.pelanggan$Aktif <- gsub("O", "0", data.pelanggan$Aktif)
-data.pelanggan$Aktif <- gsub("I", "1", data.pelanggan$Aktif)
-
 
 
 ##Wrangling kolom tanggal lahir
@@ -130,17 +82,55 @@ data.pelanggan$Tanggal.Lahir <- gsub(" Oktober ", "-10-", data.pelanggan$Tanggal
 data.pelanggan$Tanggal.Lahir <- gsub(" November ", "-11-", data.pelanggan$Tanggal.Lahir)
 data.pelanggan$Tanggal.Lahir <- gsub(" Desember ", "-12-", data.pelanggan$Tanggal.Lahir)
 
-
-
-##Wrangling kolom tanggal lahir
-
 #Menyamakan pola tanggal lahir
 data.pelanggan[basic_pattern_analysis(data.pelanggan$Tanggal.Lahir)=="99/99/99",]$Tanggal.Lahir <- 
-      format(as.Date(data.pelanggan[basic_pattern_analysis(data.pelanggan$Tanggal.Lahir)=="99/99/99",]$Tanggal.Lahir, format = "%m/%d/%y"), "%d-%m-%Y")
+  format(as.Date(data.pelanggan[basic_pattern_analysis(data.pelanggan$Tanggal.Lahir)=="99/99/99",]$Tanggal.Lahir, format = "%m/%d/%y"), "%d-%m-%Y")
 
 data.pelanggan[basic_pattern_analysis(data.pelanggan$Tanggal.Lahir)=="99/99/9999",]$Tanggal.Lahir <- 
-      format(as.Date(data.pelanggan[basic_pattern_analysis(data.pelanggan$Tanggal.Lahir)=="99/99/9999",]$Tanggal.Lahir, format = "%m/%d/%Y"), "%d-%m-%Y")
+  format(as.Date(data.pelanggan[basic_pattern_analysis(data.pelanggan$Tanggal.Lahir)=="99/99/9999",]$Tanggal.Lahir, format = "%m/%d/%Y"), "%d-%m-%Y")
 
+
+##Wrangling Kolom Aktif
+
+#Mencari tau apakah ada pola yang berbeda
+basic_pattern_analysis(data.pelanggan$Aktif, unique_only = TRUE)
+
+#Melihat pola yang paling banyak
+data.pelanggan$Aktif[data.pelanggan$Pola.Aktif=="9"]
+
+#Mengganti pola menjadi pola dari yang paling banyak
+data.pelanggan$Aktif[basic_pattern_analysis(data.pelanggan$Aktif)=="AAAAA"] <- "0"
+data.pelanggan$Aktif[basic_pattern_analysis(data.pelanggan$Aktif)=="AAAA"] <- "1"
+data.pelanggan$Aktif <- gsub("O", "0", data.pelanggan$Aktif)
+data.pelanggan$Aktif <- gsub("I", "1", data.pelanggan$Aktif)
+
+
+##Wrangling pada kolom kode pos
+
+#Mencari tau apakah ada pola yang berbeda
+basic_pattern_analysis(data.pelanggan$Kode.Pos, unique_only = TRUE)
+
+#Melihat pola yang paling banyak
+data.pelanggan$Kode.Pos[data.pelanggan$Pola.Kode.Pos=="999999"]
+
+#Mengganti pola menjadi pola dari yang paling banyak
+data.pelanggan$Kode.Pos[grepl(pattern = "[A]", x = data.pelanggan$Pola.Kode.Pos, ignore.case = TRUE)]
+data.pelanggan$Kode.Pos <- gsub("O", "0", data.pelanggan$Kode.Pos)
+data.pelanggan$Kode.Pos <- gsub("I", "1", data.pelanggan$Kode.Pos)
+
+
+##Wrangling untuk kolom No.Telepon
+
+#Mencari tau pola yang berbeda menggunakan bpa
+basic_pattern_analysis(data.pelanggan$No.Telepon, unique_only = TRUE)
+
+#Melihat pola yang paling banyak
+data.pelanggan$No.Telepon[data.pelanggan$Pola.No.Telepon=="9999999999999999"]
+
+#Mengganti pola menjadi pola dari yang paling banyak
+data.pelanggan$No.Telepon <- gsub("^0", "+62", data.pelanggan$No.Telepon)
+data.pelanggan[basic_pattern_analysis(data.pelanggan$No.Telepon)=="9999999999999999",]$No.Telepon <- 
+      paste("+", data.pelanggan[basic_pattern_analysis(data.pelanggan$No.Telepon)=="9999999999999999",]$No.Telepon, sep="")
 
 
 ##Wrangling kolom nilai belanja setahun
